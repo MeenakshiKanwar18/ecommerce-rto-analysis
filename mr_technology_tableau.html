@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mr. Technology — Business Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;600;700&family=Source+Serif+4:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f4f4f2;
+  --white: #ffffff;
+  --border: #d8d8d4;
+  --border2: #e8e8e4;
+  --text: #1a1a1a;
+  --muted: #6b6b6b;
+  --light: #f0f0ee;
+  --blue: #1f77b4;
+  --blue2: #4e9fd4;
+  --blue3: #cce3f3;
+  --blue4: #e8f3fa;
+  --orange: #e07b39;
+  --orange2: #f5a96b;
+  --green: #2ca02c;
+  --green2: #5dc45d;
+  --red: #d62728;
+  --red2: #f5a0a0;
+  --gray: #7f7f7f;
+  --purple: #9467bd;
+  --teal: #17becf;
+  --header-bg: #1b3a5c;
+  --header-text: #ffffff;
+  --tab-active: #1f77b4;
+  --sans: 'Source Sans 3', sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 13px; min-height: 100vh; }
+
+/* HEADER */
+header { background: var(--header-bg); color: var(--header-text); padding: 0; }
+.header-top { display: flex; align-items: center; justify-content: space-between; padding: 12px 20px; border-bottom: 1px solid rgba(255,255,255,0.12); flex-wrap: wrap; gap: 8px; }
+.header-logo { display: flex; align-items: center; gap: 12px; }
+.logo-icon { width: 32px; height: 32px; background: var(--blue); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: white; letter-spacing: -1px; }
+.logo-text { font-size: 15px; font-weight: 600; color: white; }
+.logo-sub { font-size: 11px; color: rgba(255,255,255,0.6); margin-top: 1px; }
+.header-meta { display: flex; gap: 16px; align-items: center; }
+.meta-item { font-size: 11px; color: rgba(255,255,255,0.7); }
+.meta-item strong { color: white; font-weight: 600; }
+.period-pill { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); border-radius: 3px; padding: 4px 10px; font-size: 11px; color: white; }
+
+/* TOOLBAR */
+.toolbar { background: #16324f; display: flex; align-items: center; gap: 4px; padding: 0 20px; overflow-x: auto; }
+.tab { font-size: 12px; font-weight: 600; padding: 10px 16px; color: rgba(255,255,255,0.6); cursor: pointer; border-bottom: 3px solid transparent; white-space: nowrap; transition: all 0.15s; text-transform: uppercase; letter-spacing: 0.05em; }
+.tab:hover { color: rgba(255,255,255,0.9); background: rgba(255,255,255,0.05); }
+.tab.active { color: white; border-bottom-color: #4e9fd4; background: rgba(255,255,255,0.07); }
+
+/* MAIN */
+main { padding: 16px 20px; }
+.section { display: none; }
+.section.active { display: block; }
+
+/* FILTER BAR */
+.filter-bar { display: flex; align-items: center; gap: 10px; background: var(--white); border: 1px solid var(--border); border-radius: 4px; padding: 8px 14px; margin-bottom: 14px; flex-wrap: wrap; }
+.filter-label { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-right: 4px; }
+.filter-chip { font-size: 11px; background: var(--blue3); color: var(--blue); border: 1px solid var(--blue2); border-radius: 3px; padding: 2px 8px; font-weight: 600; }
+.filter-chip.orange { background: #fce8d8; color: var(--orange); border-color: var(--orange2); }
+.filter-chip.green { background: #d4edda; color: var(--green); border-color: var(--green2); }
+.filter-sep { width: 1px; height: 16px; background: var(--border); }
+.filter-note { font-size: 11px; color: var(--muted); margin-left: auto; }
+
+/* KPI STRIP */
+.kpi-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; margin-bottom: 14px; }
+.kpi-cell { background: var(--white); padding: 14px 16px; }
+.kpi-label { font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+.kpi-val { font-size: 24px; font-weight: 700; line-height: 1; color: var(--text); }
+.kpi-val.blue { color: var(--blue); }
+.kpi-val.green { color: var(--green); }
+.kpi-val.red { color: var(--red); }
+.kpi-val.orange { color: var(--orange); }
+.kpi-delta { font-size: 11px; margin-top: 5px; font-weight: 600; }
+.delta-up { color: var(--green); }
+.delta-down { color: var(--red); }
+.kpi-sub2 { font-size: 10px; color: var(--muted); margin-top: 3px; }
+
+/* GRID LAYOUTS */
+.row { display: grid; gap: 14px; margin-bottom: 14px; }
+.row-2 { grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); }
+.row-3 { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.row-73 { grid-template-columns: 2fr 1fr; }
+
+/* PANEL */
+.panel { background: var(--white); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+.panel-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border-bottom: 1px solid var(--border2); background: #fafafa; }
+.panel-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text); }
+.panel-subtitle { font-size: 10px; color: var(--muted); margin-top: 2px; }
+.panel-badge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 2px; }
+.badge-blue { background: var(--blue3); color: var(--blue); }
+.badge-red { background: #fde; color: var(--red); }
+.badge-green { background: #d4edda; color: var(--green); }
+.badge-orange { background: #fce8d8; color: var(--orange); }
+.panel-body { padding: 14px; }
+
+/* BARS */
+.bar-list { display: flex; flex-direction: column; gap: 10px; }
+.bl-row { display: grid; grid-template-columns: 90px 1fr 56px; align-items: center; gap: 8px; }
+.bl-label { font-size: 12px; color: var(--text); font-weight: 600; text-align: right; }
+.bl-track { height: 20px; background: var(--light); border-radius: 2px; overflow: hidden; position: relative; }
+.bl-fill { height: 100%; border-radius: 2px; transition: width 1s ease; display: flex; align-items: center; }
+.bl-fill span { font-size: 10px; font-weight: 700; color: white; padding-left: 6px; white-space: nowrap; }
+.bl-val { font-size: 12px; font-weight: 700; color: var(--muted); text-align: right; }
+
+/* TABLES */
+table { width: 100%; border-collapse: collapse; }
+thead tr { background: #f0f4f8; }
+th { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); padding: 8px 12px; border-bottom: 2px solid var(--border); text-align: left; white-space: nowrap; }
+td { font-size: 12px; padding: 9px 12px; border-bottom: 1px solid var(--border2); color: var(--text); }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: var(--blue4); }
+.num { font-weight: 700; font-variant-numeric: tabular-nums; }
+.rank { font-size: 11px; font-weight: 700; color: var(--muted); }
+
+/* PILL TAGS */
+.tag { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 2px; }
+.tag-blue { background: var(--blue3); color: var(--blue); }
+.tag-green { background: #d4edda; color: var(--green); }
+.tag-orange { background: #fce8d8; color: var(--orange); }
+.tag-red { background: #fde; color: var(--red); }
+.tag-gray { background: var(--light); color: var(--gray); }
+.tag-teal { background: #d1f4f8; color: #0d8a98; }
+
+/* DONUT */
+svg.donut { overflow: visible; }
+
+/* TREND SPARKLINE */
+.sparkline { display: flex; align-items: flex-end; gap: 4px; height: 60px; padding: 4px 0; }
+.spark-bar { flex: 1; border-radius: 2px 2px 0 0; min-width: 0; position: relative; cursor: pointer; transition: opacity 0.15s; }
+.spark-bar:hover { opacity: 0.75; }
+.spark-bar .tip { position: absolute; bottom: 105%; left: 50%; transform: translateX(-50%); background: #1b3a5c; color: white; font-size: 10px; font-weight: 600; padding: 3px 6px; border-radius: 3px; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.15s; z-index: 10; }
+.spark-bar:hover .tip { opacity: 1; }
+.spark-labels { display: flex; gap: 4px; margin-top: 4px; }
+.spark-lbl { flex: 1; text-align: center; font-size: 10px; color: var(--muted); font-weight: 600; }
+
+/* SCATTER / DOT CHART */
+.dot-chart { display: flex; flex-direction: column; gap: 8px; }
+.dot-row { display: flex; align-items: center; gap: 10px; }
+.dot-name { font-size: 11px; color: var(--text); min-width: 130px; font-weight: 600; }
+.dot-bar-wrap { flex: 1; height: 12px; background: var(--light); border-radius: 2px; overflow: hidden; }
+.dot-bar { height: 100%; border-radius: 2px; }
+.dot-num { font-size: 11px; font-weight: 700; min-width: 40px; text-align: right; }
+
+/* INSIGHT BOX */
+.insight-box { border-left: 4px solid var(--blue); background: var(--blue4); border-radius: 0 4px 4px 0; padding: 10px 14px; margin-bottom: 10px; }
+.insight-box.warn { border-left-color: var(--red); background: #fff5f5; }
+.insight-box.success { border-left-color: var(--green); background: #f0faf0; }
+.insight-box.neutral { border-left-color: var(--orange); background: #fff8f2; }
+.ib-title { font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.ib-body { font-size: 12px; color: var(--muted); line-height: 1.65; }
+
+/* SCORECARD */
+.scorecard { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+.sc-cell { background: var(--white); padding: 12px 14px; }
+.sc-metric { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); margin-bottom: 4px; }
+.sc-val { font-size: 20px; font-weight: 700; }
+.sc-note { font-size: 10px; color: var(--muted); margin-top: 3px; }
+.sc-bar { height: 4px; border-radius: 2px; margin-top: 8px; background: var(--light); overflow: hidden; }
+.sc-bar-fill { height: 100%; border-radius: 2px; }
+
+/* FOOTER */
+.dash-footer { margin-top: 20px; padding: 10px 0; border-top: 1px solid var(--border); font-size: 10px; color: var(--muted); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px; }
+.footer-source { font-weight: 600; }
+
+/* WATERMARK */
+.wm { font-size: 10px; color: var(--blue); font-weight: 700; background: var(--blue4); border: 1px solid var(--blue3); padding: 2px 8px; border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <div class="header-logo">
+      <div class="logo-icon">MR</div>
+      <div>
+        <div class="logo-text">Mr. Technology — Sales Analytics</div>
+        <div class="logo-sub">Mobile Accessories &amp; Personalized Products · Vadodara, Gujarat</div>
+      </div>
+    </div>
+    <div class="header-meta">
+      <div class="meta-item">Prepared by <strong>Business Analyst Candidate</strong></div>
+      <div class="period-pill">Oct 2024 – Mar 2025</div>
+    </div>
+  </div>
+  <div class="toolbar">
+    <div class="tab active" onclick="show('overview')">&#9632; Overview</div>
+    <div class="tab" onclick="show('platforms')">&#9632; Platform Analysis</div>
+    <div class="tab" onclick="show('products')">&#9632; Product Performance</div>
+    <div class="tab" onclick="show('rto')">&#9632; RTO Deep Dive</div>
+    <div class="tab" onclick="show('insights')">&#9632; Insights &amp; Actions</div>
+  </div>
+</header>
+
+<main>
+
+<!-- OVERVIEW -->
+<div class="section active" id="overview">
+  <div class="filter-bar">
+    <span class="filter-label">Filters:</span>
+    <span class="filter-chip">All Platforms</span>
+    <span class="filter-chip orange">All Products</span>
+    <span class="filter-chip green">Oct 2024 – Mar 2025</span>
+    <div class="filter-sep"></div>
+    <span class="filter-note">6-month period · 3 platforms · 10 active SKUs</span>
+  </div>
+
+  <div class="kpi-strip">
+    <div class="kpi-cell">
+      <div class="kpi-label">Total GMV</div>
+      <div class="kpi-val blue">₹42.6L</div>
+      <div class="kpi-delta delta-up">▲ 18% vs prev period</div>
+    </div>
+    <div class="kpi-cell">
+      <div class="kpi-label">Total Orders</div>
+      <div class="kpi-val">14,820</div>
+      <div class="kpi-delta delta-up">▲ 12% vs prev period</div>
+    </div>
+    <div class="kpi-cell">
+      <div class="kpi-label">Avg Order Value</div>
+      <div class="kpi-val orange">₹287</div>
+      <div class="kpi-delta delta-up">▲ ₹24 vs prev period</div>
+    </div>
+    <div class="kpi-cell">
+      <div class="kpi-label">Overall RTO %</div>
+      <div class="kpi-val red">21.4%</div>
+      <div class="kpi-delta delta-down">▼ 3.2pp worse — action needed</div>
+    </div>
+    <div class="kpi-cell">
+      <div class="kpi-label">Gross Margin</div>
+      <div class="kpi-val green">38.2%</div>
+      <div class="kpi-sub2">After platform fees &amp; shipping</div>
+    </div>
+    <div class="kpi-cell">
+      <div class="kpi-label">Delivered Orders</div>
+      <div class="kpi-val">11,649</div>
+      <div class="kpi-sub2">3,171 RTOs excluded</div>
+    </div>
+  </div>
+
+  <div class="row row-2">
+    <div class="panel">
+      <div class="panel-header">
+        <div>
+          <div class="panel-title">Monthly GMV Trend</div>
+          <div class="panel-subtitle">Revenue in ₹ Lakhs — Oct 2024 to Mar 2025</div>
+        </div>
+        <span class="panel-badge badge-blue">Bar Chart</span>
+      </div>
+      <div class="panel-body">
+        <div class="sparkline" id="gmv-spark"></div>
+        <div class="spark-labels" id="gmv-labels"></div>
+        <div style="margin-top:12px;font-size:11px;color:var(--muted)">Peak in Feb–Mar likely driven by Valentine's Day personalized gifting + seasonal demand spike.</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header">
+        <div>
+          <div class="panel-title">Revenue Share by Platform</div>
+          <div class="panel-subtitle">Contribution to total GMV</div>
+        </div>
+        <span class="panel-badge badge-blue">Donut</span>
+      </div>
+      <div class="panel-body" style="display:flex;align-items:center;gap:24px;flex-wrap:wrap">
+        <svg width="120" height="120" viewBox="0 0 120 120" class="donut">
+          <circle cx="60" cy="60" r="46" fill="none" stroke="#e8e8e4" stroke-width="22"/>
+          <!-- Amazon 62% = 289.9deg -->
+          <circle cx="60" cy="60" r="46" fill="none" stroke="#1f77b4" stroke-width="22"
+            stroke-dasharray="289.1 579.8" stroke-dashoffset="144.9" transform="rotate(-90 60 60)"/>
+          <!-- Flipkart 28% = 130.8deg -->
+          <circle cx="60" cy="60" r="46" fill="none" stroke="#e07b39" stroke-width="22"
+            stroke-dasharray="161.7 579.8" stroke-dashoffset="-144.2" transform="rotate(-90 60 60)"/>
+          <!-- Meesho 10% = 36deg -->
+          <circle cx="60" cy="60" r="46" fill="none" stroke="#2ca02c" stroke-width="22"
+            stroke-dasharray="57.98 579.8" stroke-dashoffset="-305.9" transform="rotate(-90 60 60)"/>
+          <text x="60" y="57" text-anchor="middle" font-size="13" font-weight="700" fill="#1a1a1a">₹42.6L</text>
+          <text x="60" y="70" text-anchor="middle" font-size="9" fill="#6b6b6b">Total GMV</text>
+        </svg>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="width:12px;height:12px;background:#1f77b4;border-radius:2px;flex-shrink:0"></div>
+            <div>
+              <div style="font-size:12px;font-weight:700">Amazon — 62%</div>
+              <div style="font-size:11px;color:var(--muted)">₹26.4L · 7,114 orders</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="width:12px;height:12px;background:#e07b39;border-radius:2px;flex-shrink:0"></div>
+            <div>
+              <div style="font-size:12px;font-weight:700">Flipkart — 28%</div>
+              <div style="font-size:11px;color:var(--muted)">₹11.9L · 4,746 orders</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="width:12px;height:12px;background:#2ca02c;border-radius:2px;flex-shrink:0"></div>
+            <div>
+              <div style="font-size:12px;font-weight:700">Meesho — 10%</div>
+              <div style="font-size:11px;color:var(--muted)">₹4.3L · 2,960 orders</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row row-2">
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-title">GMV vs RTO% by Platform</div>
+      </div>
+      <div class="panel-body">
+        <div class="bar-list">
+          <div class="bl-row">
+            <div class="bl-label">Amazon</div>
+            <div class="bl-track"><div class="bl-fill" style="width:100%;background:#1f77b4"><span>₹26.4L</span></div></div>
+            <div class="bl-val" style="color:var(--green)">RTO 9.2%</div>
+          </div>
+          <div class="bl-row">
+            <div class="bl-label">Flipkart</div>
+            <div class="bl-track"><div class="bl-fill" style="width:45%;background:#e07b39"><span>₹11.9L</span></div></div>
+            <div class="bl-val" style="color:var(--orange)">RTO 18.4%</div>
+          </div>
+          <div class="bl-row">
+            <div class="bl-label">Meesho</div>
+            <div class="bl-track"><div class="bl-fill" style="width:16%;background:#2ca02c"><span>₹4.3L</span></div></div>
+            <div class="bl-val" style="color:var(--red)">RTO 38.7%</div>
+          </div>
+        </div>
+        <div style="margin-top:14px;font-size:11px;color:var(--muted);background:#f0f4f8;padding:8px 10px;border-radius:3px;border-left:3px solid var(--blue)">
+          <strong>Key Finding:</strong> Meesho generates only 10% of revenue but has 38.7% RTO — highest of all platforms. Net effective revenue after RTO cost is only ~₹2.6L.
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-title">Order Volume vs Avg Order Value</div>
+      </div>
+      <div class="panel-body">
+        <table>
+          <thead><tr><th>Platform</th><th>Orders</th><th>AOV</th><th>% of Total</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><span class="tag tag-blue">Amazon</span></td>
+              <td class="num">7,114</td>
+              <td class="num" style="color:var(--blue)">₹371</td>
+              <td>
+                <div style="display:flex;align-items:center;gap:6px">
+                  <div style="flex:1;height:8px;background:var(--light);border-radius:2px;overflow:hidden"><div style="width:48%;height:100%;background:#1f77b4;border-radius:2px"></div></div>
+                  <span style="font-size:11px;font-weight:700;min-width:28px">48%</span>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><span class="tag tag-orange">Flipkart</span></td>
+              <td class="num">4,746</td>
+              <td class="num" style="color:var(--orange)">₹251</td>
+              <td>
+                <div style="display:flex;align-items:center;gap:6px">
+                  <div style="flex:1;height:8px;background:var(--light);border-radius:2px;overflow:hidden"><div style="width:32%;height:100%;background:#e07b39;border-radius:2px"></div></div>
+                  <span style="font-size:11px;font-weight:700;min-width:28px">32%</span>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><span class="tag tag-green">Meesho</span></td>
+              <td class="num">2,960</td>
+              <td class="num" style="color:var(--green)">₹145</td>
+              <td>
+                <div style="display:flex;align-items:center;gap:6px">
+                  <div style="flex:1;height:8px;background:var(--light);border-radius:2px;overflow:hidden"><div style="width:20%;height:100%;background:#2ca02c;border-radius:2px"></div></div>
+                  <span style="font-size:11px;font-weight:700;min-width:28px">20%</span>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PLATFORM ANALYSIS -->
+<div class="section" id="platforms">
+  <div class="panel" style="margin-bottom:14px">
+    <div class="panel-header">
+      <div class="panel-title">Platform Performance Scorecard</div>
+      <span class="panel-badge badge-blue">6-Month Summary</span>
+    </div>
+    <div class="panel-body" style="padding:0">
+      <table>
+        <thead>
+          <tr>
+            <th>Platform</th><th>GMV</th><th>Orders</th><th>AOV</th>
+            <th>RTO %</th><th>Gross Margin</th><th>Net Revenue</th><th>Health</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Amazon</strong></td>
+            <td class="num" style="color:var(--blue)">₹26,40,000</td>
+            <td class="num">7,114</td>
+            <td class="num">₹371</td>
+            <td><span style="color:var(--green);font-weight:700">9.2%</span></td>
+            <td><span style="color:var(--green);font-weight:700">44.1%</span></td>
+            <td class="num" style="color:var(--green)">₹23.97L</td>
+            <td><span class="tag tag-green">Excellent</span></td>
+          </tr>
+          <tr>
+            <td><strong>Flipkart</strong></td>
+            <td class="num" style="color:var(--orange)">₹11,90,000</td>
+            <td class="num">4,746</td>
+            <td class="num">₹251</td>
+            <td><span style="color:var(--orange);font-weight:700">18.4%</span></td>
+            <td><span style="color:var(--orange);font-weight:700">35.8%</span></td>
+            <td class="num" style="color:var(--orange)">₹9.71L</td>
+            <td><span class="tag tag-orange">Monitor</span></td>
+          </tr>
+          <tr>
+            <td><strong>Meesho</strong></td>
+            <td class="num" style="color:var(--red)">₹4,30,000</td>
+            <td class="num">2,960</td>
+            <td class="num">₹145</td>
+            <td><span style="color:var(--red);font-weight:700">38.7%</span></td>
+            <td><span style="color:var(--red);font-weight:700">14.2%</span></td>
+            <td class="num" style="color:var(--red)">₹2.63L</td>
+            <td><span class="tag tag-red">Critical</span></td>
+          </tr>
+          <tr style="background:#f7f9fc">
+            <td><strong style="color:var(--muted)">Total</strong></td>
+            <td class="num" style="color:var(--blue);font-size:13px">₹42,60,000</td>
+            <td class="num">14,820</td>
+            <td class="num">₹287</td>
+            <td><span style="color:var(--red);font-weight:700">21.4%</span></td>
+            <td><span style="color:var(--green);font-weight:700">38.2%</span></td>
+            <td class="num">₹36.31L</td>
+            <td>—</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="row row-3">
+    <div class="panel">
+      <div class="panel-header"><div class="panel-title">RTO Rate Comparison</div></div>
+      <div class="panel-body">
+        <div class="bar-list">
+          <div class="bl-row">
+            <div class="bl-label">Amazon</div>
+            <div class="bl-track"><div class="bl-fill" style="width:24%;background:#2ca02c"><span>9.2%</span></div></div>
+            <div class="bl-val" style="color:var(--green)">✓ Good</div>
+          </div>
+          <div class="bl-row">
+            <div class="bl-label">Flipkart</div>
+            <div class="bl-track"><div class="bl-fill" style="width:47%;background:#e07b39"><span>18.4%</span></div></div>
+            <div class="bl-val" style="color:var(--orange)">⚠ Warn</div>
+          </div>
+          <div class="bl-row">
+            <div class="bl-label">Meesho</div>
+            <div class="bl-track"><div class="bl-fill" style="width:100%;background:#d62728"><span>38.7%</span></div></div>
+            <div class="bl-val" style="color:var(--red)">✗ High</div>
+          </div>
+        </div>
+        <div style="margin-top:10px;font-size:10px;color:var(--muted)">Target benchmark: &lt;10% for healthy eCommerce ops</div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-header"><div class="panel-title">Gross Margin %</div></div>
+      <div class="panel-body">
+        <div class="bar-list">
+          <div class="bl-row">
+            <div class="bl-label">Amazon</div>
+            <div class="bl-track"><div class="bl-fill" style="width:100%;background:#1f77b4"><span>44.1%</span></div></div>
+            <div class="bl-val" style="color:var(--blue)">Best</div>
+          </div>
+          <div class="bl-row">
+            <div class="bl-label">Flipkart</div>
+            <div class="bl-track"><div class="bl-fill" style="width:81%;background:#4e9fd4"><span>35.8%</span></div></div>
+            <div class="bl-val" style="color:var(--blue2)">OK</div>
+          </div>
+          <div class="bl-row">
+            <div class="bl-label">Meesho</div>
+            <div class="bl-track"><div class="bl-fill" style="width:32%;background:#d62728"><span>14.2%</span></div></div>
+            <div class="bl-val" style="color:var(--red)">Low</div>
+          </div>
+        </div>
+        <div style="margin-top:10px;font-size:10px;color:var(--muted)">Target: &gt;35% margin after all costs</div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-header"><div class="panel-title">Average Order Value</div></div>
+      <div class="panel-body">
+        <div class="bar-list">
+          <div class="bl-row">
+            <div class="bl-label">Amazon</div>
+            <div class="bl-track"><div class="bl-fill" style="width:100%;background:#1f77b4"><span>₹371</span></div></div>
+            <div class="bl-val">2.6×</div>
+          </div>
+          <div class="bl-row">
+            <div class="bl-label">Flipkart</div>
+            <div class="bl-track"><div class="bl-fill" style="width:68%;background:#e07b39"><span>₹251</span></div></div>
+            <div class="bl-val">1.7×</div>
+          </div>
+          <div class="bl-row">
+            <div class="bl-label">Meesho</div>
+            <div class="bl-track"><div class="bl-fill" style="width:39%;background:#7f7f7f"><span>₹145</span></div></div>
+            <div class="bl-val">Base</div>
+          </div>
+        </div>
+        <div style="margin-top:10px;font-size:10px;color:var(--muted)">Multiples vs Meesho AOV (₹145)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PRODUCTS -->
+<div class="section" id="products">
+  <div class="row row-2">
+    <div class="panel">
+      <div class="panel-header">
+        <div>
+          <div class="panel-title">Top 10 SKUs by Revenue</div>
+          <div class="panel-subtitle">Sorted by GMV contribution</div>
+        </div>
+        <span class="panel-badge badge-blue">Oct–Mar</span>
+      </div>
+      <div class="panel-body" style="padding:0">
+        <table>
+          <thead><tr><th>#</th><th>Product</th><th>Units</th><th>Revenue</th><th>Margin</th><th>RTO%</th></tr></thead>
+          <tbody id="prod-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-title">Profit Margin by Product</div>
+        <span class="panel-badge badge-green">% Gross Margin</span>
+      </div>
+      <div class="panel-body">
+        <div class="dot-chart" id="margin-bars"></div>
+        <div style="margin-top:14px;font-size:11px;color:var(--muted);background:#f0f8ff;padding:8px 10px;border-radius:3px;border-left:3px solid var(--blue)">
+          <strong>BA Recommendation:</strong> Shift 30% more ad budget to personalized cases and AirPods cases — highest margin, lowest RTO.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-header">
+      <div class="panel-title">Product Health Matrix — Revenue vs RTO Risk</div>
+      <span class="panel-badge badge-blue">Quadrant View</span>
+    </div>
+    <div class="panel-body">
+      <table>
+        <thead><tr><th>Product</th><th>Revenue</th><th>Units Sold</th><th>Margin %</th><th>RTO %</th><th>Rating</th><th>Action</th></tr></thead>
+        <tbody id="matrix-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- RTO DEEP DIVE -->
+<div class="section" id="rto">
+  <div class="kpi-strip" style="margin-bottom:14px">
+    <div class="kpi-cell">
+      <div class="kpi-label">Total RTOs</div>
+      <div class="kpi-val red">3,171</div>
+      <div class="kpi-sub2">21.4% of all orders</div>
+    </div>
+    <div class="kpi-cell">
+      <div class="kpi-label">Revenue at Risk</div>
+      <div class="kpi-val red">₹9.1L</div>
+      <div class="kpi-sub2">GMV of returned orders</div>
+    </div>
+    <div class="kpi-cell">
+      <div class="kpi-label">Courier Cost Lost</div>
+      <div class="kpi-val orange">₹1.9L</div>
+      <div class="kpi-sub2">Forward + return shipping</div>
+    </div>
+    <div class="kpi-cell">
+      <div class="kpi-label">COD RTO Rate</div>
+      <div class="kpi-val red">31.8%</div>
+      <div class="kpi-sub2">vs 4.9% for Prepaid</div>
+    </div>
+    <div class="kpi-cell">
+      <div class="kpi-label">Potential Saving</div>
+      <div class="kpi-val green">₹2.8L</div>
+      <div class="kpi-sub2">If RTO drops to 10%</div>
+    </div>
+  </div>
+
+  <div class="row row-2">
+    <div class="panel">
+      <div class="panel-header"><div class="panel-title">RTO by Root Cause</div></div>
+      <div class="panel-body">
+        <div class="bar-list">
+          <div class="bl-row">
+            <div class="bl-label" style="min-width:120px">Customer refused</div>
+            <div class="bl-track"><div class="bl-fill" style="width:78%;background:#d62728"><span>42%</span></div></div>
+            <div class="bl-val">1,332 orders</div>
+          </div>
+          <div class="bl-row">
+            <div class="bl-label" style="min-width:120px">Wrong address</div>
+            <div class="bl-track"><div class="bl-fill" style="width:48%;background:#e07b39"><span>26%</span></div></div>
+            <div class="bl-val">824 orders</div>
+          </div>
+          <div class="bl-row">
+            <div class="bl-label" style="min-width:120px">Not available</div>
+            <div class="bl-track"><div class="bl-fill" style="width:37%;background:#f5a96b"><span>20%</span></div></div>
+            <div class="bl-val">634 orders</div>
+          </div>
+          <div class="bl-row">
+            <div class="bl-label" style="min-width:120px">Damaged goods</div>
+            <div class="bl-track"><div class="bl-fill" style="width:22%;background:#7f7f7f"><span>12%</span></div></div>
+            <div class="bl-val">381 orders</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header"><div class="panel-title">COD vs Prepaid RTO Comparison</div></div>
+      <div class="panel-body">
+        <div class="scorecard">
+          <div class="sc-cell">
+            <div class="sc-metric">COD RTO Rate</div>
+            <div class="sc-val" style="color:var(--red)">31.8%</div>
+            <div class="sc-note">9,840 COD orders</div>
+            <div class="sc-bar"><div class="sc-bar-fill" style="width:100%;background:var(--red)"></div></div>
+          </div>
+          <div class="sc-cell">
+            <div class="sc-metric">Prepaid RTO Rate</div>
+            <div class="sc-val" style="color:var(--green)">4.9%</div>
+            <div class="sc-note">4,980 Prepaid orders</div>
+            <div class="sc-bar"><div class="sc-bar-fill" style="width:15%;background:var(--green)"></div></div>
+          </div>
+          <div class="sc-cell" style="grid-column:1/-1;background:#fff8f2;border-top:1px solid var(--border2)">
+            <div class="sc-metric">Gap</div>
+            <div class="sc-val" style="color:var(--orange);font-size:16px">6.5× Higher RTO on COD</div>
+            <div class="sc-note" style="margin-top:6px;line-height:1.5">Converting just 20% of COD to Prepaid via a ₹30 discount could recover ~₹1.4L in lost shipping costs per period — paying for the discount in &lt;2 weeks.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-header">
+      <div class="panel-title">RTO Reduction Action Plan</div>
+      <span class="panel-badge badge-blue">Prioritised Roadmap</span>
+    </div>
+    <div class="panel-body" style="padding:0">
+      <table>
+        <thead><tr><th>#</th><th>Action</th><th>Target</th><th>Est. RTO Reduction</th><th>Effort</th><th>Cost Saving</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="rank">01</td>
+            <td>Pre-delivery confirmation call/SMS for all COD orders &gt; ₹200</td>
+            <td>Meesho + Flipkart</td>
+            <td style="color:var(--green);font-weight:700">−6 to 8%</td>
+            <td><span class="tag tag-green">Low</span></td>
+            <td style="color:var(--green);font-weight:700">~₹80K/period</td>
+            <td><span class="tag tag-red">Do This Week</span></td>
+          </tr>
+          <tr>
+            <td class="rank">02</td>
+            <td>Offer ₹30 prepaid discount to convert COD → Prepaid</td>
+            <td>All platforms</td>
+            <td style="color:var(--green);font-weight:700">−4 to 5%</td>
+            <td><span class="tag tag-green">Low</span></td>
+            <td style="color:var(--green);font-weight:700">~₹1.4L/period</td>
+            <td><span class="tag tag-red">Do This Week</span></td>
+          </tr>
+          <tr>
+            <td class="rank">03</td>
+            <td>Identify top-20 high-RTO pin codes and restrict COD</td>
+            <td>Flipkart + Meesho</td>
+            <td style="color:var(--orange);font-weight:700">−3 to 4%</td>
+            <td><span class="tag tag-orange">Medium</span></td>
+            <td style="color:var(--orange);font-weight:700">~₹50K/period</td>
+            <td><span class="tag tag-orange">This Month</span></td>
+          </tr>
+          <tr>
+            <td class="rank">04</td>
+            <td>Add address validation check before dispatch</td>
+            <td>All platforms</td>
+            <td style="color:var(--orange);font-weight:700">−2 to 3%</td>
+            <td><span class="tag tag-orange">Medium</span></td>
+            <td style="color:var(--orange);font-weight:700">~₹30K/period</td>
+            <td><span class="tag tag-orange">This Month</span></td>
+          </tr>
+          <tr>
+            <td class="rank">05</td>
+            <td>Upgrade packaging for tempered glass (fragile SKUs)</td>
+            <td>All platforms</td>
+            <td style="color:var(--muted);font-weight:700">−1 to 2%</td>
+            <td><span class="tag tag-red">High</span></td>
+            <td style="color:var(--muted)">~₹15K/period</td>
+            <td><span class="tag tag-blue">Plan Q2</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- INSIGHTS -->
+<div class="section" id="insights">
+  <div class="row row-2">
+    <div>
+      <div class="insight-box warn">
+        <div class="ib-title">🔴 Meesho RTO at 38.7% — Needs Immediate Action</div>
+        <div class="ib-body">Despite 2,960 orders, Meesho's net effective revenue after RTO costs is only ~₹2.6L — least profitable per order. Nearly all driven by COD. Recommend pre-delivery confirmation calls immediately. If no improvement in 60 days, consider pausing Meesho and reallocating that budget to Amazon sponsored ads.</div>
+      </div>
+      <div class="insight-box warn">
+        <div class="ib-title">🟠 COD Orders Cost ₹1.9L Extra Per Period</div>
+        <div class="ib-body">COD RTO (31.8%) is 6.5× higher than Prepaid (4.9%). Converting just 20% of COD to Prepaid with a ₹30 discount would recover ~₹1.4L in shipping costs per period — paying for the incentive in under 2 weeks.</div>
+      </div>
+      <div class="insight-box success">
+        <div class="ib-title">🟢 Amazon Is the Business Engine — Invest More Here</div>
+        <div class="ib-body">Amazon: 62% of GMV, 44% margin, 9.2% RTO — best on all metrics. AOV of ₹371 is 2.5× Meesho. Recommendation: Increase Amazon PPC budget by 30%, focus A+ content on top 5 SKUs, target 500+ reviews on hero products to boost organic ranking.</div>
+      </div>
+    </div>
+    <div>
+      <div class="insight-box success">
+        <div class="ib-title">🟢 Top 3 SKUs = 54% of Revenue — Protect These</div>
+        <div class="ib-body">iPhone 15 cases, Samsung Galaxy cases, and tempered glass bundles drive over half of all revenue with lowest RTO and highest margins. These must have priority in inventory planning, ads, and listing optimization. A stockout on any of these directly hurts the business.</div>
+      </div>
+      <div class="insight-box neutral">
+        <div class="ib-title">🟡 Personalized Cases = Untapped Margin Opportunity</div>
+        <div class="ib-body">Personalized cases carry 55% gross margin vs 32–38% for standard cases. Volume is currently low, but the margin is exceptional. A targeted Instagram/Facebook campaign with a ₹5,000 test budget could significantly improve blended margin if ROAS exceeds 4×.</div>
+      </div>
+      <div class="insight-box">
+        <div class="ib-title">🔵 Feb–Mar Spike = Seasonal Pattern to Exploit</div>
+        <div class="ib-body">GMV jumped 34% in Feb–Mar, likely Valentine's Day gifting and end-of-quarter spending. Recommendation: Pre-stock inventory by January 15, run early-bird promotions from Jan 20, and create Valentine's Day personalized case bundles for next cycle.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-header">
+      <div class="panel-title">Top 3 Actions for Immediate Business Impact</div>
+      <span class="panel-badge badge-green">BA Recommendations</span>
+    </div>
+    <div class="panel-body" style="padding:0">
+      <table>
+        <thead><tr><th>#</th><th>Action</th><th>Expected Outcome</th><th>Timeline</th><th>Owner</th></tr></thead>
+        <tbody>
+          <tr>
+            <td style="color:var(--blue);font-weight:700">01</td>
+            <td>Add COD confirmation calls/SMS on Meesho and Flipkart COD orders</td>
+            <td style="color:var(--green);font-weight:600">RTO drops ~8% · Saves ₹80K per period</td>
+            <td><span class="tag tag-red">Week 1</span></td>
+            <td>Operations + BA</td>
+          </tr>
+          <tr>
+            <td style="color:var(--blue);font-weight:700">02</td>
+            <td>Increase Amazon PPC budget 30% on top 5 SKUs with A+ content update</td>
+            <td style="color:var(--green);font-weight:600">Amazon GMV +12–15% in 30 days</td>
+            <td><span class="tag tag-red">Week 2</span></td>
+            <td>Marketing + BA</td>
+          </tr>
+          <tr>
+            <td style="color:var(--blue);font-weight:700">03</td>
+            <td>Launch personalized case campaign on Instagram with ₹5,000 test budget</td>
+            <td style="color:var(--green);font-weight:600">Blended margin +4–6 pp if ROAS &gt; 4×</td>
+            <td><span class="tag tag-orange">Month 1</span></td>
+            <td>Marketing</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="dash-footer">
+    <div>
+      <span class="footer-source">Data Source:</span> Sample dataset modelled on typical Indian mobile accessories eCommerce — Oct 2024 to Mar 2025 · 3 platforms · 10 active SKUs
+    </div>
+    <div class="wm">Prepared by BA Candidate · Mr. Technology Interview</div>
+  </div>
+</div>
+
+</main>
+
+<script>
+// GMV SPARKLINE
+const months = ['Oct','Nov','Dec','Jan','Feb','Mar'];
+const gmv = [5.8,6.2,7.1,6.9,8.4,8.2];
+const maxG = Math.max(...gmv);
+const spark = document.getElementById('gmv-spark');
+const slabels = document.getElementById('gmv-labels');
+gmv.forEach((v,i) => {
+  const b = document.createElement('div');
+  b.className = 'spark-bar';
+  b.style.height = ((v/maxG)*100)+'%';
+  b.style.background = v >= 8 ? '#1f77b4' : '#4e9fd4';
+  b.innerHTML = `<div class="tip">₹${v}L</div>`;
+  spark.appendChild(b);
+  const l = document.createElement('div');
+  l.className = 'spark-lbl';
+  l.textContent = months[i];
+  slabels.appendChild(l);
+});
+
+// PRODUCT TABLE
+const prods = [
+  {n:'iPhone 15 Back Cover',u:2140,r:'₹7,92,000',m:42,rto:7.1,rt:'4.4'},
+  {n:'Samsung S24 Case',u:1820,r:'₹6,37,000',m:39,rto:8.4,rt:'4.3'},
+  {n:'Tempered Glass Bundle',u:1650,r:'₹4,95,000',m:48,rto:5.2,rt:'4.6'},
+  {n:'Personalised Name Case',u:980,r:'₹4,41,000',m:55,rto:4.8,rt:'4.7'},
+  {n:'iPhone 14 Flip Cover',u:1120,r:'₹3,92,000',m:35,rto:11.2,rt:'4.1'},
+  {n:'Redmi Note 13 Case',u:1380,r:'₹2,90,000',m:31,rto:24.6,rt:'3.9'},
+  {n:'OnePlus 12 Cover',u:760,r:'₹2,66,000',m:37,rto:9.8,rt:'4.2'},
+  {n:'AirPods Case',u:890,r:'₹2,23,000',m:51,rto:6.1,rt:'4.5'},
+  {n:'Realme C67 Cover',u:1100,r:'₹1,98,000',m:28,rto:29.1,rt:'3.7'},
+  {n:'Camera Lens Protector',u:640,r:'₹1,92,000',m:53,rto:5.5,rt:'4.4'},
+];
+const pt = document.getElementById('prod-tbody');
+prods.forEach((p,i) => {
+  const rc = p.rto > 20 ? 'color:var(--red)' : p.rto > 12 ? 'color:var(--orange)' : 'color:var(--green)';
+  pt.innerHTML += `<tr>
+    <td class="rank">${String(i+1).padStart(2,'0')}</td>
+    <td style="font-weight:600">${p.n}</td>
+    <td class="num">${p.u.toLocaleString()}</td>
+    <td class="num" style="color:var(--blue)">${p.r}</td>
+    <td class="num" style="color:var(--green)">${p.m}%</td>
+    <td class="num" style="${rc}">${p.rto}%</td>
+  </tr>`;
+});
+
+// MARGIN BARS
+const mb = document.getElementById('margin-bars');
+const top5 = prods.sort((a,b)=>b.m-a.m).slice(0,6);
+top5.forEach(p => {
+  const col = p.m>50 ? 'var(--blue)' : p.m>40 ? 'var(--blue2)' : 'var(--orange)';
+  mb.innerHTML += `<div class="dot-row">
+    <div class="dot-name" style="font-size:11px">${p.n}</div>
+    <div class="dot-bar-wrap"><div class="dot-bar" style="width:${p.m}%;background:${col}"></div></div>
+    <div class="dot-num" style="color:${col}">${p.m}%</div>
+  </div>`;
+});
+
+// MATRIX TABLE
+const mx = document.getElementById('matrix-tbody');
+const allP = [
+  {n:'iPhone 15 Back Cover',r:'₹7,92,000',u:2140,m:42,rto:7.1,rt:'4.4',a:'Star — Invest More'},
+  {n:'Samsung S24 Case',r:'₹6,37,000',u:1820,m:39,rto:8.4,rt:'4.3',a:'Star — Invest More'},
+  {n:'Tempered Glass Bundle',r:'₹4,95,000',u:1650,m:48,rto:5.2,rt:'4.6',a:'Star — Protect Stock'},
+  {n:'Personalised Name Case',r:'₹4,41,000',u:980,m:55,rto:4.8,rt:'4.7',a:'Grow — Push Ads'},
+  {n:'iPhone 14 Flip Cover',r:'₹3,92,000',u:1120,m:35,rto:11.2,rt:'4.1',a:'Stable — Monitor'},
+  {n:'Redmi Note 13 Case',r:'₹2,90,000',u:1380,m:31,rto:24.6,rt:'3.9',a:'Fix RTO First'},
+  {n:'AirPods Case',r:'₹2,23,000',u:890,m:51,rto:6.1,rt:'4.5',a:'Grow — Push Ads'},
+  {n:'Realme C67 Cover',r:'₹1,98,000',u:1100,m:28,rto:29.1,rt:'3.7',a:'Review — Low Margin + High RTO'},
+  {n:'Camera Lens Protector',r:'₹1,92,000',u:640,m:53,rto:5.5,rt:'4.4',a:'Grow — Push Ads'},
+];
+allP.forEach(p => {
+  const rc = p.rto>20?'tag-red':p.rto>12?'tag-orange':'tag-green';
+  const ac = p.a.includes('Star')?'tag-blue':p.a.includes('Grow')?'tag-green':p.a.includes('Fix')||p.a.includes('Review')?'tag-red':'tag-gray';
+  mx.innerHTML += `<tr>
+    <td style="font-weight:600">${p.n}</td>
+    <td class="num" style="color:var(--blue)">${p.r}</td>
+    <td class="num">${p.u.toLocaleString()}</td>
+    <td class="num" style="color:var(--green)">${p.m}%</td>
+    <td><span class="tag ${rc}">${p.rto}%</span></td>
+    <td>${p.rt} ★</td>
+    <td><span class="tag ${ac}">${p.a}</span></td>
+  </tr>`;
+});
+
+function show(id) {
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const ids=['overview','platforms','products','rto','insights'];
+  document.querySelectorAll('.tab')[ids.indexOf(id)].classList.add('active');
+  window.scrollTo(0,0);
+}
+</script>
+</body>
+</html>
